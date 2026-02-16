@@ -120,11 +120,17 @@ const App: React.FC = () => {
     });
 
     const [step, setStep] = useState<'SCENARIO' | 'ALLOC_ASSET' | 'ALLOC_STOCK' | 'RESULT'>('SCENARIO');
+    const [toast, setToast] = useState<{ message: string; visible: boolean }>({ message: '', visible: false });
 
     // Temporary state for the current round's decision
     const [tempPortfolio, setTempPortfolio] = useState<Portfolio>({ ...INITIAL_PORTFOLIO });
 
     // --- Helper Functions ---
+    const showToast = (message: string) => {
+        setToast({ message, visible: true });
+        setTimeout(() => setToast(prev => ({ ...prev, visible: false })), 3000);
+    };
+
     const openSamsungPop = () => {
         const userAgent = navigator.userAgent.toLowerCase();
         const isAndroid = userAgent.indexOf("android") > -1;
@@ -280,6 +286,16 @@ const App: React.FC = () => {
     // --- Handlers ---
 
     const handleStart = () => {
+        if (gameState.selectedCharacter !== 'rich') {
+            const messages: Record<string, string> = {
+                sport: "스포츠 스타는 현재 훈련 중입니다! 넉넉한 자산가님의 포트폴리오를 먼저 관리해 보시겠어요?",
+                chairman: "기업가는 현재 신규 사업 구상 중입니다! 지금은 자산가 PB로서 역량을 발휘해 보세요.",
+                idol: "글로벌 아이돌은 월드 투어 중입니다! 자산가의 자산을 먼저 불려주시는 건 어떨까요?"
+            };
+            showToast(messages[gameState.selectedCharacter] || "준비 중인 캐릭터입니다.");
+            setGameState(prev => ({ ...prev, selectedCharacter: 'rich' }));
+            return;
+        }
         setGameState(prev => ({ ...prev, currentRound: 1 }));
         setStep('SCENARIO');
     };
@@ -304,81 +320,78 @@ const App: React.FC = () => {
 
     // --- Rendering ---
 
-    // 0. Intro Screen
-    if (gameState.currentRound === 0) {
-        return (
-            <div className="flex-1 flex flex-col items-center justify-center p-5 text-center">
-                <div className="w-full samsung-card p-10 animate-samsung-up text-center relative overflow-hidden">
-                    <div className="absolute top-0 right-0 w-32 h-32 bg-blue-50 rounded-full blur-3xl -mr-16 -mt-16 opacity-50"></div>
+    // --- Rendering Helpers ---
 
-                    {/* Intro Content */}
-                    <div className="w-36 h-36 mx-auto mb-4 relative z-10">
-                        <img src="/assets/icons/icon.png" className="w-full h-full object-contain drop-shadow-2xl" alt="Logo" />
-                    </div>
+    const renderIntro = () => (
+        <div className="flex-1 flex flex-col items-center justify-center text-center animate-samsung-up">
+            <div className="w-full samsung-card p-10 text-center relative overflow-hidden">
+                <div className="absolute top-0 right-0 w-32 h-32 bg-blue-50 rounded-full blur-3xl -mr-16 -mt-16 opacity-50"></div>
 
-                    <h1 className="text-[32px] font-black text-[#1A1F27] mb-3 tracking-tighter leading-tight relative z-10">두근두근‼️<br />억만장자 키우기</h1>
-                    <p className="text-slate-500 font-medium mb-6 text-[16px] leading-relaxed relative z-10">
-                        당신은 삼성증권의 <span className="text-[#0351FF] font-bold">VIP 전담 PB</span>입니다.<br />
-                        매 라운드마다 바뀌는 경제 상황!<br />
-                        당신의 선택이 VIP의 미래를 결정합니다.<br /><br />
-                        <span className="text-[#0351FF] font-bold">1. 자산 배분:</span> <br />제한된 종목에서 자산 비중을 최적화하세요.<br />
-                        <span className="text-[#0351FF] font-bold">2. 고객 선택:</span> <br />당신의 운명을 함께할 VIP를 선택하세요!<br />
-                    </p>
+                {/* Intro Content */}
+                <div className="w-36 h-36 mx-auto mb-4 relative z-10">
+                    <img src="/assets/icons/icon.png" className="w-full h-full object-contain drop-shadow-2xl" alt="Logo" />
+                </div>
 
-                    <div className="grid grid-cols-2 gap-4 mb-12 relative z-10">
-                        {[
-                            { id: 'rich', name: '자산가', role: 'The Wealthy', img: '/assets/rich_neutral.png' },
-                            { id: 'sport', name: '스포츠 스타', role: 'Sport Star', img: '/assets/sport_neutral.png' },
-                            { id: 'chairman', name: '기업가', role: 'CEO', img: '/assets/chairman_neutral.png' },
-                            { id: 'idol', name: '아이돌', role: 'Global Idol', img: '/assets/idol_neutral.png' }
-                        ].map((char) => (
-                            <div
-                                key={char.id}
-                                onClick={() => setGameState(prev => ({ ...prev, selectedCharacter: char.id as any }))}
-                                className={`group cursor-pointer rounded-[32px] border-2 transition-all duration-300 p-2.5 relative ${gameState.selectedCharacter === char.id
-                                    ? 'border-[#0351FF] bg-blue-50/30 shadow-xl shadow-blue-500/5'
-                                    : 'border-white bg-white shadow-sm hover:border-gray-200 hover:shadow-md'
-                                    }`}
-                            >
-                                <div className="aspect-[1/1] rounded-[24px] overflow-hidden mb-3 bg-gray-50 border border-gray-100">
-                                    <img src={char.img} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" alt={char.name} />
-                                </div>
-                                <div className="text-left px-2 mb-1">
-                                    <p className="text-[10px] text-slate-400 font-black uppercase tracking-widest leading-none mb-1">{char.role}</p>
-                                    <h3 className="text-[14px] font-black text-[#1A1F27] tracking-tight">{char.name}</h3>
-                                </div>
-                                {gameState.selectedCharacter === char.id && (
-                                    <div className="absolute top-4 right-4 w-6 h-6 bg-[#0351FF] rounded-full flex items-center justify-center shadow-lg shadow-blue-500/30">
-                                        <CheckCircle className="w-4 h-4 text-white" />
-                                    </div>
-                                )}
+                <h1 className="text-[32px] font-black text-[#1A1F27] mb-3 tracking-tighter leading-tight relative z-10">두근두근‼️<br />억만장자 키우기</h1>
+                <p className="text-slate-500 font-medium mb-6 text-[16px] leading-relaxed relative z-10">
+                    당신은 삼성증권의 <span className="text-[#0351FF] font-bold">VIP 전담 PB</span>입니다.<br />
+                    매 라운드마다 바뀌는 경제 상황!<br />
+                    당신의 선택이 VIP의 미래를 결정합니다.<br /><br />
+                    <span className="text-[#0351FF] font-bold">1. 자산 배분:</span> <br />제한된 종목에서 자산 비중을 최적화하세요.<br />
+                    <span className="text-[#0351FF] font-bold">2. 고객 선택:</span> <br />당신의 운명을 함께할 VIP를 선택하세요!<br />
+                </p>
+
+                <div className="grid grid-cols-2 gap-4 mb-12 relative z-10">
+                    {[
+                        { id: 'rich', name: '자산가', role: 'The Wealthy', img: '/assets/rich_neutral.png', available: true },
+                        { id: 'sport', name: '스포츠 스타', role: 'Sport Star', img: '/assets/sport_neutral.png', available: false },
+                        { id: 'chairman', name: '기업가', role: 'CEO', img: '/assets/chairman_neutral.png', available: false },
+                        { id: 'idol', name: '아이돌', role: 'Global Idol', img: '/assets/idol_neutral.png', available: false }
+                    ].map((char) => (
+                        <div
+                            key={char.id}
+                            onClick={() => setGameState(prev => ({ ...prev, selectedCharacter: char.id as any }))}
+                            className={`group cursor-pointer rounded-[32px] border-2 transition-all duration-300 p-2.5 relative ${gameState.selectedCharacter === char.id
+                                ? 'border-[#0351FF] bg-blue-50/30 shadow-xl shadow-blue-500/5'
+                                : 'border-white bg-white shadow-sm hover:border-gray-200 hover:shadow-md'
+                                }`}
+                        >
+                            <div className="aspect-[1/1] rounded-[24px] overflow-hidden mb-3 bg-gray-50 border border-gray-100 relative">
+                                <img src={char.img} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" alt={char.name} />
                             </div>
-                        ))}
-                    </div>
-
-                    <button
-                        onClick={handleStart}
-                        className="samsung-btn-primary w-full py-5 text-[18px] flex items-center justify-center gap-3 relative z-10 shadow-2xl shadow-blue-500/20"
-                    >
-                        시뮬레이션 시작 <ChevronRight className="w-6 h-6" />
-                    </button>
+                            <div className="text-left px-2 mb-1">
+                                <p className="text-[10px] text-slate-400 font-black uppercase tracking-widest leading-none mb-1">{char.role}</p>
+                                <h3 className="text-[14px] font-black text-[#1A1F27] tracking-tight">{char.name}</h3>
+                            </div>
+                            {gameState.selectedCharacter === char.id && (
+                                <div className="absolute top-4 right-4 w-6 h-6 bg-[#0351FF] rounded-full flex items-center justify-center shadow-lg shadow-blue-500/30">
+                                    <CheckCircle className="w-4 h-4 text-white" />
+                                </div>
+                            )}
+                        </div>
+                    ))}
                 </div>
 
-                <div className="mt-8 text-center space-y-1 relative z-10">
-                    <p className="text-[10px] text-gray-400 font-bold tracking-widest uppercase">Samsung Securities PB Simulation</p>
-                    <p className="text-[9px] text-gray-400/60 font-medium">본 서비스는 가상 시뮬레이션이며, 실존 인물의 실제 판단과 무관합니다.</p>
-                </div>
+                <button
+                    onClick={handleStart}
+                    className="samsung-btn-primary w-full py-5 text-[18px] flex items-center justify-center gap-3 relative z-10 shadow-2xl shadow-blue-500/20"
+                >
+                    시뮬레이션 시작 <ChevronRight className="w-6 h-6" />
+                </button>
             </div>
-        );
-    }
 
-    // 5. Ending Screen (After Round 4)
-    if (gameState.currentRound > 4) {
+            <div className="mt-8 text-center space-y-1 relative z-10">
+                <p className="text-[10px] text-gray-400 font-bold tracking-widest uppercase">Samsung Securities PB Simulation</p>
+                <p className="text-[9px] text-gray-400/60 font-medium">본 서비스는 가상 시뮬레이션이며, 실존 인물의 실제 판단과 무관합니다.</p>
+            </div>
+        </div>
+    );
+
+    const renderEnding = () => {
         const avgScore = Math.round(gameState.totalScore / 4);
         const finalAssets = gameState.currentTotalAssets;
         const initialAssets = 100000000000;
         const profit = finalAssets - initialAssets;
-
         const isProfit = profit >= 0;
 
         const getFinalComment = () => {
@@ -388,12 +401,10 @@ const App: React.FC = () => {
             return "실망이 크네... 자네는 PB의 기본인 '리스크 관리'부터 다시 공부하고 오게나.";
         };
 
-        const finalComment = getFinalComment();
-
         return (
-            <div className="flex-1 flex flex-col">
+            <div className="flex-1 flex flex-col -mt-5 -mx-5 animate-samsung-up">
                 <Header round={5} totalRounds={4} assets={finalAssets} />
-                <div className="flex-1 p-3 w-full animate-samsung-up">
+                <div className="flex-1 p-5 w-full">
                     <div className="samsung-card bg-white border border-gray-100 shadow-2xl relative overflow-hidden p-0">
                         {/* Report Header */}
                         <div className="bg-[#1A1F27] p-6 text-white relative overflow-hidden">
@@ -438,7 +449,7 @@ const App: React.FC = () => {
                                     <div className="bg-[#F8FAFC] p-3 rounded-[16px] border border-gray-50 relative">
                                         <div className="absolute -top-1.5 left-3 w-3 h-3 bg-[#F8FAFC] border-l border-t border-gray-50 transform rotate-45"></div>
                                         <p className="text-[13px] font-bold text-slate-500 leading-tight break-keep italic">
-                                            "{finalComment}"
+                                            "{getFinalComment()}"
                                         </p>
                                     </div>
                                 </div>
@@ -548,7 +559,7 @@ const App: React.FC = () => {
                 </div>
             </div>
         );
-    }
+    };
 
     // --- Main Game Loops ---
 
@@ -749,17 +760,33 @@ const App: React.FC = () => {
     };
 
     return (
-        <div className="mobile-view font-sans text-[#1A1F27] selection:bg-blue-100">
+        <div className="mobile-view font-sans text-[#1A1F27] selection:bg-blue-100 flex flex-col min-h-screen">
             {gameState.currentRound > 0 && gameState.currentRound <= 4 && (
                 <Header round={gameState.currentRound} totalRounds={4} assets={gameState.currentTotalAssets} />
             )}
 
-            <main className="flex-1 p-5">
-                {step === 'SCENARIO' && renderScenario()}
-                {step === 'ALLOC_ASSET' && renderAssetAllocation()}
-                {step === 'ALLOC_STOCK' && renderStockAllocation()}
-                {step === 'RESULT' && renderResult()}
+            <main className="flex-1 p-5 overflow-x-hidden">
+                {gameState.currentRound === 0 && renderIntro()}
+                {gameState.currentRound > 0 && gameState.currentRound <= 4 && (
+                    <>
+                        {step === 'SCENARIO' && renderScenario()}
+                        {step === 'ALLOC_ASSET' && renderAssetAllocation()}
+                        {step === 'ALLOC_STOCK' && renderStockAllocation()}
+                        {step === 'RESULT' && renderResult()}
+                    </>
+                )}
+                {gameState.currentRound > 4 && renderEnding()}
             </main>
+
+            {/* Toast Notification */}
+            <div className={`fixed bottom-10 left-1/2 -translate-x-1/2 z-[100] transition-all duration-500 transform w-[calc(100%-40px)] max-w-sm ${toast.visible ? 'translate-y-0 opacity-100' : 'translate-y-12 opacity-0 pointer-events-none'}`}>
+                <div className="bg-[#1A1F27]/90 backdrop-blur-md text-white px-6 py-4 rounded-[24px] shadow-2xl border border-white/10 flex items-center gap-3">
+                    <div className="w-10 h-10 bg-[#0351FF] rounded-full flex items-center justify-center flex-shrink-0 shadow-lg shadow-blue-500/20">
+                        <User className="w-5 h-5 text-white" />
+                    </div>
+                    <p className="text-[14px] font-bold leading-tight break-keep">{toast.message}</p>
+                </div>
+            </div>
         </div>
     );
 };
