@@ -327,10 +327,10 @@ const App: React.FC = () => {
 
                     <div className="grid grid-cols-2 gap-4 mb-12 relative z-10">
                         {[
-                            { id: 'rich', name: '자산가', role: 'Investor', img: '/assets/rich_neutral.png' },
-                            { id: 'sport', name: '스포츠 스타', role: 'World Star', img: '/assets/sport_neutral.png' },
+                            { id: 'rich', name: '자산가', role: 'The Wealthy', img: '/assets/rich_neutral.png' },
+                            { id: 'sport', name: '스포츠 스타', role: 'Sport Star', img: '/assets/sport_neutral.png' },
                             { id: 'chairman', name: '기업가', role: 'CEO', img: '/assets/chairman_neutral.png' },
-                            { id: 'idol', name: '아이돌', role: 'Global Star', img: '/assets/idol_neutral.png' }
+                            { id: 'idol', name: '아이돌', role: 'Global Idol', img: '/assets/idol_neutral.png' }
                         ].map((char) => (
                             <div
                                 key={char.id}
