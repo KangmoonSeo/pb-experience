@@ -1,0 +1,147 @@
+/* Samsung-inspired Light Mode Design System */
+:root {
+  --samsung-blue: #0351FF;
+  --samsung-blue-hover: #0041D9;
+  --samsung-blue-light: #F0F5FF;
+  --samsung-gray-bg: #F8FAFC;
+  --samsung-gray-border: #E5E7EB;
+  --samsung-text-primary: #1A1F27;
+  --samsung-text-secondary: #64748B;
+  --samsung-card-shadow: 0 4px 20px rgba(0, 0, 0, 0.03), 0 1px 2px rgba(0, 0, 0, 0.02);
+  --samsung-radius: 20px;
+}
+
+body {
+  background-color: #E2E8F0;
+  /* Slightly darker background for desktop view */
+  color: var(--samsung-text-primary);
+  margin: 0;
+  padding: 0;
+  -webkit-font-smoothing: antialiased;
+  display: flex;
+  justify-content: center;
+}
+
+#root {
+  width: 100%;
+  max-width: 430px;
+  /* iPhone 14/15 Pro Max width */
+  min-height: 100vh;
+  min-height: -webkit-fill-available;
+  background-color: var(--samsung-gray-bg);
+  box-shadow: 0 0 100px rgba(0, 0, 0, 0.1);
+  position: relative;
+}
+
+.mobile-view {
+  width: 100%;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Custom Components */
+.samsung-card {
+  background: white;
+  border-radius: var(--samsung-radius);
+  border: 1px solid white;
+  box-shadow: var(--samsung-card-shadow);
+}
+
+.samsung-btn-primary {
+  background-color: var(--samsung-blue);
+  color: white;
+  font-weight: 700;
+  border-radius: 14px;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 12px rgba(3, 81, 255, 0.2);
+}
+
+.samsung-btn-primary:active {
+  transform: scale(0.97);
+}
+
+.samsung-btn-primary:hover {
+  background-color: var(--samsung-blue-hover);
+}
+
+.samsung-btn-secondary {
+  background-color: white;
+  color: var(--samsung-text-primary);
+  font-weight: 700;
+  border-radius: 14px;
+  border: 1px solid var(--samsung-gray-border);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.samsung-btn-secondary:hover {
+  background-color: #F9FAFB;
+}
+
+.samsung-badge {
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+/* Custom Slider Styling */
+input[type='range'] {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 6px;
+  background: #E5E7EB;
+  border-radius: 5px;
+  outline: none;
+}
+
+input[type='range']::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 24px;
+  height: 24px;
+  background: white;
+  border: 4px solid var(--samsung-blue);
+  border-radius: 50%;
+  cursor: pointer;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s ease;
+}
+
+input[type='range']:active::-webkit-slider-thumb {
+  transform: scale(1.1);
+}
+
+/* Animations */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-samsung-up {
+  animation: fadeInUp 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+}
+
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+.hide-scrollbar {
+  -ms-overflow-style: none;
+  /* IE and Edge */
+  scrollbar-width: none;
+  /* Firefox */
+}
