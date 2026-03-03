@@ -253,7 +253,7 @@ const App: React.FC = () => {
                 comment = "방산주로 리스크를 예술적으로 방어했군! 오늘 당장 차 계약하러 가게나.";
             } else if (tempPortfolio.stockRatio > 80) {
                 satisfaction = Math.min(satisfaction, 20);
-                comment = "사막의 한가운데서 나침반을 잃어버린 기분이야. 내 자산이 장난인가?";
+                comment = "자네, 사막의 밤이 왜 무서운지 아나? 지금 내 기분이 딱 그렇군.";
             }
         } else if (id === 4) { // Round 4: Pandemic
             if ((normalizedStocks[StockId.CELLTRION] > 15 || normalizedStocks[StockId.NETFLIX] > 15) && profitPercent > 0) {
