@@ -365,12 +365,12 @@ const App: React.FC = () => {
 
                 <div className="grid grid-cols-3 gap-3 mb-10 relative z-10">
                     {[
-                        { id: 'rich', name: '천수르', role: '초고액자산가', img: '/assets/characters/rich_neutral.png', available: true },
-                        { id: 'sport', name: '송운동', role: '스포츠스타', img: '/assets/characters/sport_neutral.png', available: false },
-                        { id: 'heir', name: '박재벌', role: '재벌3세', img: '/assets/characters/heir_neutral.png', available: false },
-                        { id: 'idol', name: '엘라', role: '아이돌', img: '/assets/characters/idol_neutral.png', available: false },
-                        { id: 'newly', name: '김졸부', role: '벼락부자', img: '/assets/characters/newly_neutral.png', available: false },
-                        { id: 'chairman', name: '나대표', role: 'CEO', img: '/assets/characters/chairman_neutral.png', available: false }
+                        { id: 'rich', name: '천수르', role: '초고액자산가', img: '/assets/characters/rich_neutral.jpg', available: true },
+                        { id: 'sport', name: '송운동', role: '스포츠스타', img: '/assets/characters/sport_neutral.jpg', available: false },
+                        { id: 'heir', name: '박재벌', role: '재벌3세', img: '/assets/characters/heir_neutral.jpg', available: false },
+                        { id: 'idol', name: '엘라', role: '아이돌', img: '/assets/characters/idol_neutral.jpg', available: false },
+                        { id: 'newly', name: '김졸부', role: '벼락부자', img: '/assets/characters/newly_neutral.jpg', available: false },
+                        { id: 'chairman', name: '나대표', role: 'CEO', img: '/assets/characters/chairman_neutral.jpg', available: false }
                     ].map((char) => (
                         <div
                             key={char.id}
@@ -383,7 +383,7 @@ const App: React.FC = () => {
                             <div className="aspect-[1/1] rounded-[24px] overflow-hidden mb-3 bg-gray-50 border border-gray-100 relative">
                                 <img src={char.img} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" alt={char.name} />
                             </div>
-                            <div className="text-left px-2 mb-1">
+                            <div className="text-left px-1.5 mb-1">
                                 <p className="text-[12px] text-slate-400 font-black uppercase tracking-widest leading-none">{char.role}</p>
                                 <h3 className="text-[17px] font-black text-[#1A1F27] tracking-tight">{char.name}</h3>
                             </div>
@@ -449,8 +449,8 @@ const App: React.FC = () => {
                                     <div className={`w-24 h-32 rounded-[24px] overflow-hidden border-2 bg-gray-50 shadow-md ${avgScore >= 60 ? 'border-red-100' : 'border-blue-100'}`}>
                                         <img
                                             src={gameState.selectedCharacter === 'rich'
-                                                ? (avgScore >= 80 ? '/assets/characters/rich_happy.png' : avgScore >= 60 ? '/assets/characters/rich_neutral.png' : avgScore >= 40 ? '/assets/characters/rich_sad.png' : '/assets/characters/rich_angry.png')
-                                                : `/assets/characters/${gameState.selectedCharacter}_neutral.png`}
+                                                ? (avgScore >= 80 ? '/assets/characters/rich_happy.jpg' : avgScore >= 60 ? '/assets/characters/rich_neutral.jpg' : avgScore >= 40 ? '/assets/characters/rich_sad.jpg' : '/assets/characters/rich_angry.jpg')
+                                                : `/assets/characters/${gameState.selectedCharacter}_neutral.jpg`}
                                             alt="Client"
                                             className="w-full h-full object-cover"
                                         />
@@ -600,7 +600,7 @@ const App: React.FC = () => {
                 <div className="w-full flex justify-center mb-4">
                     <div className="w-3/4 aspect-[4/3] rounded-[24px] overflow-hidden bg-white shadow-xl border border-gray-100">
                         <img
-                            src={`/assets/round/round_${gameState.currentRound}.png`}
+                            src={`/assets/round/round_${gameState.currentRound}.jpg`}
                             className="w-full h-full object-cover"
                             alt="Round Illustration"
                         />
