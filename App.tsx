@@ -802,7 +802,7 @@ const App: React.FC = () => {
                 <Header round={gameState.currentRound} totalRounds={4} assets={gameState.currentTotalAssets} />
             )}
 
-            <main className="flex-1 p-5 overflow-x-hidden">
+            <main className="flex-1 p-4 overflow-x-hidden">
                 {gameState.currentRound === 0 && renderIntro()}
                 {gameState.currentRound > 0 && gameState.currentRound <= 4 && (
                     <>
